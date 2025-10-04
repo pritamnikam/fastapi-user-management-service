@@ -1,18 +1,22 @@
 [project]
-name = "recording"
+name = "ai-prompt-catalog"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
+description = "A FastAPI backend for managing and externalizing LLM prompts with PostgreSQL."
+authors = ["Your Name <your.email@example.com>"]
 requires-python = ">=3.13"
 dependencies = [
-    "fastapi>=0.116.1",
-    "httpx>=0.28.1",
-    "pydantic-settings>=2.10.1",
-    "pytest>=8.4.1",
-    "python-dotenv>=1.1.1",
-    "sqlalchemy>=2.0.42",
-    "uvicorn>=0.35.0",
+    "fastapi>=0.118.0",
+    "uvicorn[standard]>=0.29.0",
+    "sqlalchemy>=2.0.0",
+    "psycopg2-binary>=2.9.0",
+    "pydantic>=2.7.0",
+    "python-dotenv>=1.0.0",
+    "jinja2>=3.1.0",
+    "pydantic-settings>=2.0.0"
 ]
+
+[tool.uv]
+virtualenvs.in-project = true
 
 [tool.pytest.ini_options]
 pythonpath = "."

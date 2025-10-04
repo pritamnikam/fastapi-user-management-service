@@ -16,3 +16,5 @@ build/
 .eggs/
 .DS_Store
 Thumbs.db
+uv.lock
+.venv/

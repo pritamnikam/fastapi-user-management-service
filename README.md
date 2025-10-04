@@ -1,137 +1,80 @@
-# Scalable FastAPI User Management Service
+# AI Prompt Catalog Backend
 
-A robust FastAPI REST API for user management, featuring SQLAlchemy ORM, Pydantic models, Docker support, and comprehensive testing.
+A production-ready FastAPI backend for managing and externalizing LLM prompts, designed for integration with AI applications.  
+Features a PostgreSQL database, REST API, and an admin portal for prompt management.
 
 ## Features
 
-- FastAPI RESTful endpoints for CRUD operations on users
-- SQLAlchemy ORM for database interactions
-- Pydantic models for request/response validation
-- Docker and Compose for containerized deployment
-- Environment variable support via `.env`
-- Pytest-based unit and integration tests
+- **Prompt Catalog:** CRUD API for storing and managing AI prompts
+- **User Management:** Example user CRUD endpoints
+- **Admin Portal:** Web interface for prompt administration
+- **PostgreSQL Database:** Reliable, scalable storage
+- **Containerized:** Docker & Compose for easy deployment
+- **Best Practices:** Modern Python, type hints, modular structure
 
 ## Getting Started
 
 ### Prerequisites
 
 - Python 3.13+
-- Docker (optional for containerized deployment)
-- [uv](https://github.com/astral-sh/uv) for dependency management
+- Docker & Docker Compose
 
-### Installation (Local)
+### Local Development
 
+1. Install dependencies:
+    ```sh
+    uv sync
+    ```
+2. Start the server:
+    ```sh
+    uv run uvicorn app.main:app --reload
+    ```
+
+### Docker Deployment
+
+1. Build and run with Docker Compose:
+    ```sh
+    docker compose up --build
+    ```
+2. The API will be available at [http://localhost:8000/api/v1/prompts](http://localhost:8000/api/v1/prompts)
+3. The admin portal is at [http://localhost:8000/admin](http://localhost:8000/admin)
+
+### API Usage Examples
+
+#### Create a Prompt
 ```sh
-uv sync
-```
-
-### Running the Server Locally
-
-```sh
-uv run uvicorn app.main:app --reload
-```
-
-Server runs at [http://localhost:8000](http://localhost:8000).
-
-## Docker Usage
-
-### Build the Docker Image
-
-```sh
-docker build -t fastapi-user-service .
-```
-
-### Run the Container
-
-```sh
-docker run -d -p 8000:8000 --env-file .env fastapi-user-service
-```
-
-### Using Docker Compose
-
-```sh
-docker compose up --build
-```
-
-## Dockerfile Overview
-
-The `Dockerfile` typically:
-
-- Uses an official Python base image
-- Installs dependencies from `requirements.txt` or `pyproject.toml`
-- Copies application code into the container
-- Sets environment variables
-- Runs the FastAPI app with Uvicorn
-
-Example snippet:
-
-```dockerfile
-FROM python:3.13-slim
-
-WORKDIR /app
-
-COPY pyproject.toml ./
-RUN pip install --upgrade pip && pip install uv
-
-COPY . .
-
-EXPOSE 8000
-
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-## API Usage Examples
-
-#### Create a User
-
-```sh
-curl -X POST "http://localhost:8000/api/v1/users" \
+curl -X POST "http://localhost:8000/api/v1/prompts" \
      -H "Content-Type: application/json" \
-     -d '{"name": "Ada Lovelace"}'
+     -d '{"name": "Summarize", "content": "Summarize the following text:", "description": "General summary prompt"}'
 ```
 
-#### Get All Users
-
+#### List Prompts
 ```sh
-curl -X GET "http://localhost:8000/api/v1/users"
+curl -X GET "http://localhost:8000/api/v1/prompts"
 ```
 
-#### Get a User by ID
-
+#### Update a Prompt
 ```sh
-curl -X GET "http://localhost:8000/api/v1/users/1"
-```
-
-#### Update a User
-
-```sh
-curl -X PUT "http://localhost:8000/api/v1/users/1" \
+curl -X PUT "http://localhost:8000/api/v1/prompts/1" \
      -H "Content-Type: application/json" \
-     -d '{"name": "Grace Hopper"}'
+     -d '{"name": "Summarize", "content": "Summarize this:", "description": "Updated prompt"}'
 ```
 
-#### Delete a User
-
+#### Delete a Prompt
 ```sh
-curl -X DELETE "http://localhost:8000/api/v1/users/1"
-```
-
-## Testing
-
-```sh
-pytest
+curl -X DELETE "http://localhost:8000/api/v1/prompts/1"
 ```
 
 ## Environment Variables
 
-See `.env.example` for required variables.
+See `.env.example` for required variables (used by Docker Compose).
 
 ## Project Structure
 
 ```
 project/
   app/
-    api/v1/         # API routes
+    api/v1/         # API routes (user, prompt, admin)
     core/           # Config and logging
     db/             # Database schema
     models/         # Pydantic models
@@ -141,8 +84,7 @@ project/
   Dockerfile
   docker-compose.yaml
   .env.example
-  .python-version
-  test.db
+  pyproject.toml
+  .gitignore
+  .dockerignore
 ```
-
----

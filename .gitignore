@@ -4,33 +4,26 @@ __pycache__/
 *.pyo
 *.pyd
 *.db
+*.sqlite3
 .env
 .env.*
-*.sqlite3
+test.db
 
 # VSCode
 .vscode/
 
-# Docker
-*.log
-*.pid
-
 # Test/coverage
 .coverage
-htmlcov/
-.tox/
 .pytest_cache/
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
 
 # Distribution
-build/
 dist/
+build/
 *.egg-info/
 .eggs/
 
 # OS
 .DS_Store
 Thumbs.db
+uv.lock
+.venv/

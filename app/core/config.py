@@ -11,16 +11,21 @@ load_dotenv()
 
 class Config(BaseSettings):
     """App configuration loaded from environment variables."""
-    app_name: str = "ScalableFastAPIProject"
+    app_name: str = "PromptCatalog"
     debug: bool = False
-    db_user: str = ""
-    db_password: str = ""
-    db_name: str = "test.db"
+    db_user: str = "admin"
+    db_password: str = "secret"
+    db_name: str = "prompt_catalog"
+    db_host: str = "db"
+    db_port: str = "5432"
 
     @property
     def db_url(self):
-        """Constructs the database URL for SQLite."""
-        return f"sqlite:///./{self.db_name}"
+        """Constructs the database URL for PostgreSQL."""
+        return (
+            f"postgresql+psycopg2://{self.db_user}:{self.db_password}"
+            f"@{self.db_host}:{self.db_port}/{self.db_name}"
+        )
 
 
 config = Config()

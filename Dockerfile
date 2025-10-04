@@ -18,7 +18,12 @@ RUN uv sync
 
 ENV PATH="/app/.venv/bin:{$PATH}"
 
-# Expose the specified port for FastAPI
-EXPOSE $PORT
+# Expose ports for FastAPI and Streamlit
+EXPOSE 80 8501
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+# Copy the startup script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Use the startup script as the entrypoint
+CMD ["/start.sh"]

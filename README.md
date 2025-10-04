@@ -1,14 +1,16 @@
 # AI Prompt Catalog Backend
 
 A production-ready FastAPI backend for managing and externalizing LLM prompts, designed for integration with AI applications.  
-Features a PostgreSQL database, REST API, and an admin portal for prompt management.
+Features a PostgreSQL database, REST API, and an admin portal for prompt management with versioning support.
 
 ## Features
 
-- **Prompt Catalog:** CRUD API for storing and managing AI prompts
+- **Prompt Catalog:** CRUD API for storing and managing AI prompts with versioning
+- **Multi-Application Support:** Organize prompts by application ID
+- **Version Control:** Track prompt history with automatic versioning
 - **User Management:** Example user CRUD endpoints
-- **Admin Portal:** Web interface for prompt administration
-- **PostgreSQL Database:** Reliable, scalable storage
+- **Admin Portal:** Interactive web interface for prompt administration
+- **PostgreSQL Database:** Reliable, scalable storage with data integrity
 - **Containerized:** Docker & Compose for easy deployment
 - **Best Practices:** Modern Python, type hints, modular structure
 
@@ -36,8 +38,37 @@ Features a PostgreSQL database, REST API, and an admin portal for prompt managem
     ```sh
     docker compose up --build
     ```
-2. The API will be available at [http://localhost:8000/api/v1/prompts](http://localhost:8000/api/v1/prompts)
-3. The admin portal is at [http://localhost:8000/admin](http://localhost:8000/admin)
+2. The FastAPI backend will be available at [http://localhost:8000/api/v1/prompts](http://localhost:8000/api/v1/prompts)
+3. The Streamlit Admin Portal will be available at [http://localhost:8501](http://localhost:8501)
+
+### Admin Portal
+
+The Streamlit Admin Portal provides a comprehensive interface for managing prompts with the following features:
+
+- **Application Selector:** Choose the target application from a dynamically populated dropdown
+- **Prompt List:** View all prompts for the selected application with version information
+- **Prompt Editor:** Create and edit prompt content with automatic versioning
+- **History & Rollback:** View complete version history with the ability to restore previous versions
+- **Multi-User Support:** Track changes by user with the created_by field
+
+The portal is designed for ease of use while providing powerful prompt management capabilities:
+
+- **Version Management:** Each edit creates a new version while preserving history
+- **Active Version Control:** Only one version of each prompt is active at a time
+- **Intuitive Interface:** Clear organization with tabular displays of prompts and versions
+- **Real-time Feedback:** Immediate confirmation of successful operations
+
+### Prompt Schema
+
+The prompt system uses a robust schema designed for versioning and multi-application support:
+
+- **app_id:** Application identifier for organizing prompts
+- **prompt_key:** Unique identifier for the prompt within an application
+- **prompt_text:** The actual prompt content
+- **version:** Automatically incremented version number
+- **is_active:** Flag indicating the currently active version
+- **created_by:** User who created this version
+- **created_at:** Timestamp of creation
 
 ### API Usage Examples
 
@@ -45,19 +76,38 @@ Features a PostgreSQL database, REST API, and an admin portal for prompt managem
 ```sh
 curl -X POST "http://localhost:8000/api/v1/prompts" \
      -H "Content-Type: application/json" \
-     -d '{"name": "Summarize", "content": "Summarize the following text:", "description": "General summary prompt"}'
+     -d '{
+       "app_id": "chatbot",
+       "prompt_key": "greeting",
+       "prompt_text": "You are a friendly assistant. Greet the user warmly.",
+       "created_by": "admin",
+       "is_active": true
+     }'
 ```
 
-#### List Prompts
+#### List All Prompts
 ```sh
 curl -X GET "http://localhost:8000/api/v1/prompts"
 ```
 
-#### Update a Prompt
+#### List Prompts for a Specific Application
+```sh
+curl -X GET "http://localhost:8000/api/v1/prompts?app_id=chatbot"
+```
+
+#### Get Active Prompt Version
+```sh
+curl -X GET "http://localhost:8000/api/v1/prompts/active/chatbot/greeting"
+```
+
+#### Update a Prompt (Creates New Version)
 ```sh
 curl -X PUT "http://localhost:8000/api/v1/prompts/1" \
      -H "Content-Type: application/json" \
-     -d '{"name": "Summarize", "content": "Summarize this:", "description": "Updated prompt"}'
+     -d '{
+       "prompt_text": "You are a friendly and helpful assistant. Greet the user warmly.",
+       "is_active": true
+     }'
 ```
 
 #### Delete a Prompt
@@ -80,6 +130,7 @@ project/
     models/         # Pydantic models
     services/       # Business logic
     main.py         # FastAPI app entrypoint
+    streamlit_app.py # Streamlit admin portal
   tests/            # Pytest tests
   Dockerfile
   docker-compose.yaml

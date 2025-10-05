@@ -21,11 +21,7 @@ def get_prompts(
 def create_prompt(prompt: PromptCreate, service: PromptService = Depends(get_prompt_service)):
     try:
         return service.create_prompt(
-            app_id=prompt.app_id,
-            prompt_key=prompt.prompt_key,
-            prompt_text=prompt.prompt_text,
-            created_by=prompt.created_by,
-            is_active=prompt.is_active
+            prompt=prompt
         )
     except IntegrityError:
         raise HTTPException(
@@ -51,8 +47,7 @@ def get_active_prompt(app_id: str, prompt_key: str, service: PromptService = Dep
 def update_prompt(prompt_id: int, prompt: PromptUpdate, service: PromptService = Depends(get_prompt_service)):
     updated = service.update_prompt(
         prompt_id=prompt_id,
-        prompt_text=prompt.prompt_text,
-        is_active=prompt.is_active
+        prompt=prompt
     )
     if not updated:
         raise HTTPException(status_code=404, detail="Prompt not found")

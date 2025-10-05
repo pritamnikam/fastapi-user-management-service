@@ -1,11 +1,15 @@
 """SQLAlchemy ORM schema definitions and database engine setup."""
 
 import sqlalchemy
-from sqlalchemy import String, Text, create_engine, DateTime, func, Boolean, Integer
+from sqlalchemy import String, Text, create_engine, DateTime, func, Boolean, Integer, Index
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
+from sqlalchemy import Column, ForeignKey, Integer, String, Text, DateTime, Boolean, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column
+# from app.db.base import Base
 
 from app.core.config import config
 
+# Database engine setup
 if config.db_url.startswith("sqlite"):
     engine = create_engine(config.db_url, connect_args={"check_same_thread": False})
 else:
@@ -43,10 +47,19 @@ class Prompt(Base):
     # Define unique constraints
     __table_args__ = (
         # Ensure version uniqueness for each (app_id, prompt_key) combination
-        sqlalchemy.UniqueConstraint('app_id', 'prompt_key', 'version', name='uq_prompt_version'),
+        UniqueConstraint(
+            'app_id', 
+            'prompt_key', 
+            'version', 
+            name='uq_prompt_version'
+        ),
         
         # Create a partial index to ensure only one active version per prompt key
-        sqlalchemy.Index('ix_active_prompt', 'app_id', 'prompt_key', 
-                        unique=True, 
-                        postgresql_where=sqlalchemy.text('is_active = true')),
+        Index(
+            'ix_active_prompt', 
+            'app_id', 
+            'prompt_key', 
+            unique=True, 
+            postgresql_where=sqlalchemy.text('is_active = true')
+        ),
     )

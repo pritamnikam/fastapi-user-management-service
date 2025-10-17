@@ -2,7 +2,7 @@
 name = "ai-prompt-catalog"
 version = "0.1.0"
 description = "A FastAPI backend for managing and externalizing LLM prompts with PostgreSQL."
-authors = ["Your Name <your.email@example.com>"]
+authors = ["Pritam Nikam <pritam.nikam@gmail.com>"]
 requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.118.0",
@@ -16,9 +16,6 @@ dependencies = [
     "streamlit>=1.32.0",
     "pandas>=2.0.0"
 ]
-
-[tool.uv]
-virtualenvs.in-project = true
 
 [tool.pytest.ini_options]
 pythonpath = "."

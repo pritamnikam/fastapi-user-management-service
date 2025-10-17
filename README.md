@@ -31,6 +31,10 @@ Features a PostgreSQL database, REST API, and an admin portal for prompt managem
     ```sh
     uv run uvicorn app.main:app --reload
     ```
+3. Start streamlit app
+   ```sh
+   uv run streamlit run app/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+   ```
 
 ### Docker Deployment
 
